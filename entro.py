@@ -7,27 +7,30 @@ from typing import Union, Any
 
 class Entropy:
 
-    def __init__(self, string=None, base: Union[float, int] = 2) -> None:
-        self.string = string or b""
+    def __init__(self, array=None, base: Union[float, int] = 2) -> None:
+        if array:
+            self.array = bytes(array)
+        else:
+            self.array = b""
         self._base = base
 
-    def update(self, string: Any) -> None:
-        self.string = bytes(self.string)
-        self.string += bytes(string)
+    def update(self, array: Any) -> None:
+        self.array = bytes(self.array)
+        self.array += bytes(array)
 
-    def _p(self, i: bytes) -> float:
-        return self.string.count(i) / len(self.string)
+    def _p(self, i: int) -> float:
+        return self.array.count(i) / len(self.array)
 
     def shannon(self) -> float:
         """Calculates Shannon entropy"""
         H = 0.0
-        for i in set(self.string):
+        for i in set(self.array):
             H -= self._p(i) * log(self._p(i), self._base)
         return H
 
     def metric(self) -> float:
         """Calculates normalised Shannon entropy"""
-        return self.shannon() / len(self.string)
+        return self.shannon() / len(self.array)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Calculate entropy")
@@ -43,7 +46,10 @@ if __name__ == "__main__":
         parser.print_usage()
         exit(1)
 
-    log_base = args.base or 2
+    if args.base is not None:
+        log_base = args.base
+    else:
+        log_base = 2
     entropy = Entropy(base=log_base)
 
     if args.file:
