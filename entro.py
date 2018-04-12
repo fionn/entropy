@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-from math import log
+import sys
 import argparse
 import getpass
+from math import log
 from typing import Union, Any
 
 class Entropy:
@@ -33,6 +34,7 @@ class Entropy:
         return self.shannon() / len(self.array)
 
 if __name__ == "__main__":
+    sys.tracebacklimit = 0
     parser = argparse.ArgumentParser(description="Calculate entropy")
     parser.add_argument("-f", "--file")
     parser.add_argument("-t", "--text")
@@ -44,7 +46,7 @@ if __name__ == "__main__":
 
     if not args.shannon or args.metric:
         parser.print_usage()
-        exit(1)
+        sys.exit(1)
 
     if args.base is not None:
         log_base = args.base
