@@ -8,16 +8,12 @@ from typing import Union, Any
 
 class Entropy:
 
-    def __init__(self, array=None, base: Union[float, int] = 2) -> None:
-        if array:
-            self.array = bytes(array)
-        else:
-            self.array = b""
+    def __init__(self, array: bytes = None, base: Union[float, int] = 2) -> None:
+        self.array = array or b""
         self._base = base
 
-    def update(self, array: Any) -> None:
-        self.array = bytes(self.array)
-        self.array += bytes(array)
+    def update(self, array: bytes) -> None:
+        self.array += array
 
     def _p(self, i: int) -> float:
         return self.array.count(i) / len(self.array)
@@ -34,7 +30,7 @@ class Entropy:
         return self.shannon() / len(self.array)
 
 if __name__ == "__main__":
-    sys.tracebacklimit = 0
+    ENCODING = "utf8"
     parser = argparse.ArgumentParser(description="Calculate entropy")
     parser.add_argument("-f", "--file")
     parser.add_argument("-t", "--text")
@@ -58,11 +54,11 @@ if __name__ == "__main__":
         with open(args.file, "rb") as f:
             entropy.update(f.read())
     elif args.text:
-        entropy.update(args.text)
+        entropy.update(bytes(args.text, ENCODING))
     elif args.password:
-        entropy.update(getpass.getpass())
+        entropy.update(bytes(getpass.getpass(), ENCODING))
     else:
-        entropy.update(input("Enter text: "))
+        entropy.update(bytes(input("Enter text: "), ENCODING))
 
     if args.shannon:
         print(entropy.shannon())
