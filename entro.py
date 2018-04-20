@@ -13,6 +13,7 @@ class Entropy:
         self._base = base
 
     def update(self, array: bytes) -> None:
+        """Adds new data to the array"""
         self.array += array
 
     def _p(self, i: int) -> float:
@@ -32,22 +33,26 @@ class Entropy:
 if __name__ == "__main__":
     ENCODING = "utf8"
     parser = argparse.ArgumentParser(description="Calculate entropy")
-    parser.add_argument("-f", "--file")
-    parser.add_argument("-t", "--text")
+    input_group = parser.add_mutually_exclusive_group()
+    input_group.add_argument("-f", "--file")
+    input_group.add_argument("-t", "--text")
+    input_group.add_argument("-p", "--password", action="store_true")
     parser.add_argument("-b", "--base", type=float)
-    parser.add_argument("-p", "--password", action="store_true")
-    parser.add_argument("-s", "--shannon", action="store_true")
-    parser.add_argument("-m", "--metric", action="store_true")
+    entropy_group = parser.add_argument_group("entropies (at least one is required)")
+    entropy_group.add_argument("-s", "--shannon", action="store_true")
+    entropy_group.add_argument("-m", "--metric", action="store_true")
     args = parser.parse_args()
 
-    if not args.shannon or args.metric:
+    if not (args.shannon or args.metric):
         parser.print_usage()
+        print("You must use at least one of --shannon, --metric")
         sys.exit(1)
 
     if args.base is not None:
         log_base = args.base
     else:
         log_base = 2
+
     entropy = Entropy(base=log_base)
 
     if args.file:
