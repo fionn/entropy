@@ -4,7 +4,7 @@ Calculate the information entropy of a string, file, etc.
 
 ## Installation
 
-Install with `pip`
+Install from PyPI with `pip install entropy-calculator`.
 
 ## Usage
 
@@ -15,7 +15,7 @@ Basic usage: `entropy [-h] [-f FILE | -t TEXT | -p] [-b BASE] [-s] [-m]`.
 Requires one of `--shannon` (to calculate the Shannon entropy)
 or `--metric` (to calculate the Shannon entropy normalised by input size).
 
-Takes input fdom stdin by default, but can read from a file with `--file`
+Takes input from stdin by default, but can read from a file with `--file`
 or from the `--text` argument.
 
 Entropy is calculated in base 2 by default, but this can be changed with `--base`.
